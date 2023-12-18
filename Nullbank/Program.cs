@@ -1,4 +1,5 @@
-﻿using Nullbank.Arquivos;
+﻿using System.Net.Http.Headers;
+using Nullbank.Arquivos;
 using Nullbank.Usuarios;
 class Program
 {
@@ -76,13 +77,13 @@ class Program
                                 Console.Write("NOME >> ");
                                 string nomeFuncionario = Console.ReadLine();
 
-                                Usuario funcBusca = new Funcionario(nomeFuncionario,"",null,1,"");
+                                Usuario funcBusca = new Funcionario(nomeFuncionario, "", null, 1, "");
                                 funcBusca = Arquivo.buscaUsuario(funcBusca);
 
                                 if (!funcBusca.cpf.Equals(""))
                                 {
                                     Console.WriteLine("\nFuncionario encontrado: ");
-                                    Console.WriteLine("Nome: "+funcBusca.nome);
+                                    Console.WriteLine("Nome: " + funcBusca.nome);
                                     Console.WriteLine("CPF:" + funcBusca.cpf);
                                     Console.WriteLine("Agencia: " + funcBusca.agencia);
                                 }
@@ -91,7 +92,7 @@ class Program
                                     Console.WriteLine("Nenhum funcionario com este nome foi encontrado!");
                                 }
 
-                                if (int.Parse(escolha)==3)
+                                if (int.Parse(escolha) == 3)
                                 {
                                     Console.WriteLine("\nAlterando Funcionario: ");
 
@@ -121,8 +122,83 @@ class Program
 
                     //Opções do Funcionario
                     case 2:
-                        Console.WriteLine("Funcionario");
+                        Console.WriteLine("0 - sair\n1 - 1 criar Cliente\n2 - 2 Buscar cliente\n3 - 3 Editar cliente");
                         escolha = Console.ReadLine();
+                        switch (int.Parse(escolha))
+                        {
+                            case 0:
+                                logado = false;
+                                break;
+                            case 1:
+                                Console.WriteLine("Criando novo cliente...");
+
+                                Console.Write("CPF >> ");
+                                string cpf1 = Console.ReadLine();
+
+                                Console.Write("NOME >> ");
+                                string nome = Console.ReadLine();
+
+                                Console.Write("CEP >> ");
+                                string cep = Console.ReadLine();
+
+                                Console.Write("NUMERO >> ");
+                                int num = int.Parse(Console.ReadLine());
+
+                                Console.Write("RUA >> ");
+                                string rua = Console.ReadLine();
+
+                                Console.Write("CIDADE >> ");
+                                string cidade = Console.ReadLine();
+
+                                Console.Write("ESTADO >> ");
+                                string estado = Console.ReadLine();
+
+                                Console.Write("AGENCIA >> ");
+                                int agencia = int.Parse(Console.ReadLine());
+
+                                Console.Write("SENHA >> ");
+                                string senha = Console.ReadLine();
+
+                                Endereço clienteEndereço = new Endereço(cep, num, rua, cidade, estado);
+
+                                Cliente novoCliente = new Cliente(cpf1, nome, clienteEndereço, agencia, senha);
+
+                                Arquivo.criaArquivoUsuario(novoCliente);
+                                break;
+                            case 2:
+                                Console.WriteLine("Buscando cliente...");
+                                Console.Write("Nome do Cliente: ");
+                                string nome1 = Console.ReadLine();
+                                Usuario clienteEncontrado = new Cliente(nome1, "", null, 0, "");
+                                clienteEncontrado = Arquivo.buscaUsuario(clienteEncontrado);
+                                if (clienteEncontrado.cpf.Equals(""))
+                                {
+                                    Console.WriteLine($"Cliente encontrado:\nNome: {clienteEncontrado.nome}\nCPF: {clienteEncontrado.cpf}\nEndereço: {clienteEncontrado.EndUsuario}\nAgencia: {clienteEncontrado.agencia}\nsenha: {clienteEncontrado.senha}");
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Cliente não encontrado.");
+                                }
+                                break;
+                            case 3:
+                                Console.WriteLine("Editando cliente...");
+                                Console.Write("Nome do Cliente: ");
+                                string nome2 = Console.ReadLine();
+                                Usuario clienteParaEditar = new Cliente(nome2, "", null, 0, "");
+                                clienteParaEditar = Arquivo.buscaUsuario(clienteParaEditar);
+                                if (!clienteParaEditar.cpf.Equals(""))
+                                {
+                                    //vazio á fazer
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Cliente não encontrado. Não é possível editar.");
+                                }
+                                break;
+                            default:
+                                Console.WriteLine("opção invalida");
+                                break;
+                        }
                         break;
                     default:
                         break;
@@ -181,4 +257,3 @@ class Program
     }
 
 }
-
