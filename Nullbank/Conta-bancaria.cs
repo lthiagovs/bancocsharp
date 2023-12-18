@@ -9,22 +9,24 @@ namespace Nullbank
     abstract class Conta
     {
         public int NumeroConta;
-        public string Titular;
+        public string Usuario;
         public double Saldo;
         public List<string> historico;
         public int idade;
+        public string senha;
 
         public Conta(int numeroConta, string titular, double saldoInicial)
         {
             NumeroConta = numeroConta;
-            Titular = titular;
+            Usuario = titular;
             Saldo = saldoInicial;
             historico = new List<string>();
 
         }
+
         public void ConsultarSaldo()
         {
-            Console.WriteLine($"Saldo da conta {NumeroConta} de {Titular}: {Saldo} reais");
+            Console.WriteLine($"Saldo da conta {NumeroConta} de {Usuario}: {Saldo} reais");
         }
 
 
