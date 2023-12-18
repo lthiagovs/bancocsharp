@@ -4,12 +4,21 @@
     {
 
         public string nome;
-        protected string cpf;
-        protected Endereço endereço;
-        public int agencia;
-        public string senha;
+        public string cpf { protected set; get; }
+        private Endereço endereço;
+        public int agencia { protected set; get; }
+        public string senha { private set; get; }
 
-        //Construtor da classe Usuario
+        //Propertie do Endereço - @thiago
+        public String EndUsuario
+        {
+            get
+            {
+                return endereço.estado + "," + endereço.cidade + "," + endereço.rua + "," + endereço.numero + "," + endereço.cep;
+            }
+        }
+
+        //Construtor da classe Usuario - @thiago
         public Usuario(string nome, string cpf, Endereço endereço, int agencia, string senha)
         {
             this.nome = nome;

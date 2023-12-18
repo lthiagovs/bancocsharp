@@ -4,13 +4,13 @@
     interface IGerente
     {
 
-        //Cria uma conta
+        //Cria uma conta - @thiago
         public void criaConta();
 
-        //Deleta uma conta
+        //Deleta uma conta - @thiago
         public void deletaConta();
 
-        //Altera uma conta
+        //Altera uma conta - @thiago
         public void alteraConta();
 
 

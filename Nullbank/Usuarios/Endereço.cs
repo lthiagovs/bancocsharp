@@ -9,7 +9,7 @@
         public string cidade;
         public string estado;
 
-        //Construtor da classe Endereço
+        //Construtor da classe Endereço  - @thiago
         public Endereço(string cep, int numero, string rua, string cidade, string estado)
         {
             this.cep = cep;
