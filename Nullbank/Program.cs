@@ -1,5 +1,4 @@
-﻿using Nullbank;
-using Nullbank.Arquivos;
+﻿using Nullbank.Arquivos;
 using Nullbank.Usuarios;
 class Program
 {
@@ -7,11 +6,31 @@ class Program
     public static void Main()
     {
 
-        Usuario c1 = new Cliente("Thiago","",null,0,"");
+        bool rodar = true;
+        bool logado = false;
+        string escolha;
 
-        c1 = Arquivo.buscaUsuario(c1);
+        //Main Loop
+        while (rodar)
+        {
+            Console.WriteLine("Bem vindo ao NullBank!");
 
-        Console.WriteLine(c1.EndUsuario);
+            if (logado)
+            {
+
+            }
+            else
+            {
+                Console.WriteLine("Faça o login abaixo: ");
+                Console.Write("Login: ");
+                string login = Console.ReadLine();
+                Console.Write("Senha: ");
+                string senha = Console.ReadLine();
+
+            }
+
+
+        }
 
     }
 
