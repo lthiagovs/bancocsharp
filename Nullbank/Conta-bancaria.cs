@@ -33,6 +33,7 @@ namespace Nullbank
         {
             if (valor > 0)
             {
+                AplicarTaxa();
                 Saldo += valor;
                 string transacao = $"Depósito de R${valor}";
                 historico.Add(transacao);
@@ -49,6 +50,7 @@ namespace Nullbank
             {
                 if (Saldo >= valor)
                 {
+                    AplicarTaxa();
                     Saldo -= valor;
                     string transacao = $"Saque de R${valor}";
                     historico.Add(transacao);
@@ -70,6 +72,7 @@ namespace Nullbank
             {
                 if (Saldo >= valor)
                 {
+                    AplicarTaxa();
                     Saldo -= valor;
                     contaDestino.Saldo += valor;
 
@@ -85,6 +88,24 @@ namespace Nullbank
             else
             {
                 Console.WriteLine("O valor da transferência deve ser maior que zero.");
+            }
+        }
+        protected virtual void AplicarTaxa()
+        {
+          
+        }
+
+        protected void AdicionarHistorico(string transacao)
+        {
+            historico.Add(transacao);
+        }
+
+        public void ExibirHistorico()
+        {
+            Console.WriteLine($"Histórico de transações da conta {NumeroConta} de {Usuario}:");
+            foreach (var transacao in historico)
+            {
+                Console.WriteLine(transacao);
             }
         }
     }
