@@ -202,10 +202,10 @@ namespace Nullbank.Arquivos
                         path = "Clientes\\";
                         break;
                     case Gerente:
-                        path = "Funcionarios\\";
+                        path = "Gerentes\\";
                         break;
                     case Funcionario:
-                        path = "Gerentes\\";
+                        path = "Funcionarios\\";
                         break;
                     default:
                         path = "";
