@@ -3,19 +3,19 @@
     class Arquivo
     {
 
-        //Varias estaticas referenciando
+        //Varias estaticas referenciando - @thiago
         public static string caminhoUsuarios = "Data\\Usuarios\\";
         public static string caminhoContas = "Data\\Contas\\";
 
-        //Caminho para os arquivos
+        //Caminho para os arquivos - @thiago
         public string caminho;
 
-        //Variaveis nescessárias para alterar arquivos.
+        //Variaveis nescessárias para alterar arquivos - @thiago
         private Stream entrada;
         private StreamReader leitor;
         private StreamWriter escritor;
 
-        //Construtor da classe Arquivo
+        //Construtor da classe Arquivo - @thiago
         public Arquivo(string caminho)
         {
             this.caminho = caminho;
@@ -33,7 +33,7 @@
             }
         }
 
-        //Verifica se o arquivo existe
+        //Verifica se o arquivo existe - @thiago
         private bool arquivoExiste()
         {
             if (!File.Exists(this.caminho))
@@ -43,8 +43,8 @@
             return true;
         }
 
-        //Cria um arquivo no caminho especificado
-        public bool criaArquivo()
+        //Cria um arquivo no caminho especificado - @thiago
+        private bool criaArquivo()
         {
 
             if (!arquivoExiste())
@@ -63,8 +63,8 @@
             return false;
         }
 
-        //Apaga um arquivo no caminho especificado
-        public bool deletaArquivo()
+        //Apaga um arquivo no caminho especificado - @thiago
+        private bool deletaArquivo()
         {
             if (this.arquivoExiste())
             {
@@ -81,8 +81,8 @@
             return false;
         }
 
-        //Abre um arquivo para leitura/escrita
-        public bool abrirArquivo()
+        //Abre um arquivo para leitura/escrita - @thiago
+        private bool abrirArquivo()
         {
             if (this.arquivoExiste())
             {
@@ -98,11 +98,42 @@
             return false;
         }
 
-        //Encerra o arquivo
-        public void fecharArquivo()
+        //Encerra o arquivo - @thiago
+        private void fecharArquivo()
         {
             this.entrada.Close();
         }
+
+        //Escreve dados em um arquivo - @thiago
+        private void escreverArquivo(IList<string> dadosLista)
+        {
+
+        }
+
+        //Lê dados de um arquivo - @thiago
+        private IList<string> lerArquivo(string dados)
+        {
+            return new List<string>();
+        }
+
+        //Cria o arquivo de uma conta - @thiago
+        public static bool criarArquivoConta(Conta conta)
+        {
+            Arquivo aConta = new Arquivo(Arquivo.caminhoContas+conta.NumeroConta+".data");
+            if (!aConta.arquivoExiste())
+            {
+                if (aConta.criaArquivo())
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                Console.WriteLine("Esta conta já existe!");
+            }
+            return false;
+        }
+
 
     }
 }

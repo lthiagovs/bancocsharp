@@ -11,9 +11,6 @@ class Program
 
         teste.deletaArquivo();
 
-        
-
-
     }
 
 }
