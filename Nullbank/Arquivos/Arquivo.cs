@@ -281,6 +281,14 @@ namespace Nullbank.Arquivos
 
         }
 
+        public static HashSet<Usuario> pegaUsuario()
+        {
+            HashSet<Usuario> listaUsuarios = new HashSet<Usuario>();
+
+            
+
+            return listaUsuarios;
+        }
 
     }
 }

@@ -27,5 +27,22 @@
 
         }
 
+        //#IGerente
+        public void criaFuncionario(Funcionario funcionario)
+        {
+
+        }
+
+        //#IGerente
+        public void deletaFuncionario(string nome)
+        {
+
+        }
+
+        //#IGerente
+        public void alteraFuncionario(string nome)
+        {
+
+        }
     }
 }
