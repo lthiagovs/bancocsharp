@@ -42,7 +42,7 @@ class Program
                                 Console.WriteLine("Criando novo cliente...");
 
                                 Console.Write("CPF >> ");
-                                string cpf = Console.ReadLine();
+                                string cpf1 = Console.ReadLine();
 
                                 Console.Write("NOME >> ");
                                 string nome = Console.ReadLine();
@@ -70,85 +70,44 @@ class Program
 
                                 Endereço clienteEndereço = new Endereço(cep, num, rua, cidade, estado);
 
-                                Cliente novoCliente = new Cliente( cpf, nome, clienteEndereço ,agencia,senha);
+                                Cliente novoCliente = new Cliente( cpf1, nome, clienteEndereço ,agencia,senha);
 
                                 Arquivo.criaArquivoUsuario(novoCliente);
                                 break; 
                             case 2:
                                 Console.WriteLine("Buscando cliente...");
-                                Console.Write("CPF do Cliente: ");
-                                string cpf = Console.ReadLine();
-                                Cliente clienteEncontrado = new Cliente(cpf, nome, clienteEndereço, agencia, senha);
-                                clienteEncontrado = Arquivo.criaArquivoUsuario(clienteEncontrado);
+                                Console.Write("Nome do Cliente: ");
+                                string nome1 = Console.ReadLine();
+                                Usuario clienteEncontrado = new Cliente(nome1, "",null,0,"");
+                                clienteEncontrado = Arquivo.buscaUsuario(clienteEncontrado);
                                 if (clienteEncontrado.cpf.Equals(""))
                                 {
-                                    Console.WriteLine($"Cliente encontrado:\nNome: {clienteEncontrado.nome}\nCPF: {clienteEncontrado.cpf}\nEndereço: {clienteEncontrado.clienteEndereço}\nAgencia: {clienteEncontrado.agencia}\nsenha: {clienteEncontrado.senha}");
+                                    Console.WriteLine($"Cliente encontrado:\nNome: {clienteEncontrado.nome}\nCPF: {clienteEncontrado.cpf}\nEndereço: {clienteEncontrado.EndUsuario}\nAgencia: {clienteEncontrado.agencia}\nsenha: {clienteEncontrado.senha}");
                                 }
                                 else
                                 {
                                     Console.WriteLine("Cliente não encontrado.");
                                 }
-                        }
-                        break; 
+                                break;
                             case 3:
-                        Console.WriteLine("Editando cliente...");
-
-                       
-                        Console.Write("CPF do Cliente: ");
-                        string cpf = Console.ReadLine();
-
-                        
-                        Cliente clienteParaEditar = new Cliente(cpf, nome, clienteEndereço, agencia, senha);
-
-                       
-                        clienteParaEditar = Arquivo.buscaCliente(clienteParaEditar);
-
-                       
-                        if (!clienteParaEditar.cpf.Equals(""))
-                        {
-                            
-                            
-                            Console.Write("editar CPF >> ");
-                            clienteParaEditar.cpf = Console.ReadLine();
-
-                            Console.Write(" editar NOME >> ");
-                            clienteParaEditar.nome = Console.ReadLine();
-
-                            Console.Write("editar CEP >> ");
-                            clienteParaEditar.cep = Console.ReadLine();
-
-                            Console.Write("editar NUMERO >> ");
-                            clienteParaEditar.num = int.Parse(Console.ReadLine());
-
-                            Console.Write("editar RUA >> ");
-                            clienteParaEditar.rua = Console.ReadLine();
-
-                            Console.Write("editar CIDADE >> ");
-                            clienteParaEditar.cidade = Console.ReadLine();
-
-                            Console.Write("editar ESTADO >> ");
-                            clienteParaEditar.estado = Console.ReadLine();
-
-                            Console.Write("editar AGENCIA >> ");
-                            clienteParaEditar.agencia = int.Parse(Console.ReadLine());
-
-                            Console.Write("editar SENHA >> ");
-                            clienteParaEditar.senha = Console.ReadLine();
-
-
-                            Arquivo.salvarCliente(clienteParaEditar);
-
-                            Console.WriteLine("Cliente editado com sucesso!");
-                        }
-                        else
-                        {
-                            Console.WriteLine("Cliente não encontrado. Não é possível editar.");
-                        }
-                        break;
+                                 Console.WriteLine("Editando cliente...");
+                                 Console.Write("Nome do Cliente: ");
+                                 string nome2 = Console.ReadLine();
+                                 Usuario clienteParaEditar = new Cliente(nome2, "", null, 0, "");
+                                 clienteParaEditar = Arquivo.buscaUsuario(clienteParaEditar);
+                                 if (!clienteParaEditar.cpf.Equals(""))
+                                 {
+                                   //vazio á fazer
+                                 }
+                                 else
+                                 {
+                                 Console.WriteLine("Cliente não encontrado. Não é possível editar.");
+                                 }
+                                 break;
                             default: Console.WriteLine("opção invalida");
                                 break;
                         }
-                        break;
+                    break;
                 }
             }
             //Usuario não está logado
