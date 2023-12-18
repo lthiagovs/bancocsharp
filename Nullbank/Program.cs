@@ -1,4 +1,4 @@
-﻿using System.Net.Http.Headers;
+﻿using Nullbank.Contas;
 using Nullbank.Arquivos;
 using Nullbank.Usuarios;
 class Program
@@ -8,7 +8,9 @@ class Program
 
         bool rodar = true;
         bool logado = false;
+        bool acessaConta = false;
         Usuario usuario = null;
+        Conta conta = null;
         int tipo = 0;
         string escolha;
 
@@ -116,17 +118,73 @@ class Program
 
                     //Opções do Cliente
                     case 1:
-                        Console.WriteLine("Cliente");
-                        escolha = Console.ReadLine();
+                        //Nenhuma Conta acessada
+                        if (!acessaConta)
+                        {
+                            Console.WriteLine("0 - Sair\n1 - Acessar Conta");
+                            escolha = Console.ReadLine();
+                            switch (int.Parse(escolha))
+                            {
+                                case 0:
+
+                                    logado = false;
+                                    break;
+
+                                case 1:
+
+                                    Console.Write("NUMERO >> ");
+                                    int numeroConta = int.Parse(Console.ReadLine());
+                                    Console.Write("SENHA >> ");
+                                    string senha = Console.ReadLine();
+
+                                    Conta buscaConta = Arquivo.buscaConta(numeroConta);
+
+                                    if (!(buscaConta.numeroConta == 0))
+                                    {
+                                        conta = buscaConta;
+                                        acessaConta = true;
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("Dados incorretos.");
+                                    }
+
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                        //Conta acessada
+                        else
+                        {
+                            Console.WriteLine("Saldo da conta:"+conta.Saldo+"\n0 - Sair\n1 - Sacar\n2 - Depositar\n3 - Transferir");
+                            escolha = Console.ReadLine();
+
+                            switch (int.Parse(escolha))
+                            {
+                                case 0:
+                                    acessaConta = false;
+                                    break;
+                                case 1:
+                                    break;
+                                case 2:
+                                    break;
+                                case 3:
+                                    break;
+                                default: break;
+                            }
+
+                        }
                         break;
 
                     //Opções do Funcionario
                     case 2:
-                        Console.WriteLine("0 - sair\n1 - 1 criar Cliente\n2 - 2 Buscar cliente\n3 - 3 Editar cliente");
+                        Console.WriteLine("0 - sair\n1 - Criar Cliente\n2 - Buscar cliente\n3 - Editar cliente\n4 - Criar Conta");
                         escolha = Console.ReadLine();
                         switch (int.Parse(escolha))
                         {
                             case 0:
+                                Console.WriteLine("LogOut efetuado!");
                                 logado = false;
                                 break;
                             case 1:
@@ -195,10 +253,34 @@ class Program
                                     Console.WriteLine("Cliente não encontrado. Não é possível editar.");
                                 }
                                 break;
+                            case 4:
+                                Console.Write("NOME DO TITULAR >> ");
+                                string nomeConta = Console.ReadLine();
+                                Usuario usuarioConta = new Cliente(nomeConta,"",null,0,"");
+                                usuarioConta = Arquivo.buscaUsuario(usuarioConta);
+
+                                if (!usuarioConta.cpf.Equals(""))
+                                {
+                                    Console.WriteLine("Titular de cpf: "+usuarioConta.cpf+" encontrado!");
+                                    Conta contaCriar = new ContaCorrente(Conta.totalContas,usuarioConta as Cliente,0,0);
+
+                                    Arquivo.criarArquivoConta(contaCriar);
+
+                                    Console.WriteLine("Conta de numero: " + contaCriar.numeroConta + " criada com sucesso!");
+
+
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Este titular não existe.");
+                                }
+
+                                break;
                             default:
-                                Console.WriteLine("opção invalida");
+                                Console.WriteLine("Opção invalida");
                                 break;
                         }
+                        Console.ReadLine();
                         break;
                     default:
                         break;

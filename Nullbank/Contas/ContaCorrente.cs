@@ -1,22 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Nullbank.Usuarios;
 
-namespace Nullbank
+namespace Nullbank.Contas
 {
-    internal class Conta_corrente : Conta
+    internal class ContaCorrente : Conta
     {
         public double limitecredito;
-        public Conta_corrente(int NumeroConta, string Usuario, double saldoInicial, double limitecredito) : base(NumeroConta, Usuario, saldoInicial)
+        public ContaCorrente(int numeroConta, Cliente titular, double saldoInicial, double limitecredito) : base(numeroConta, titular, saldoInicial)
         {
+            this.numeroConta = numeroConta;
             this.limitecredito = limitecredito;
         }
         public new void ConsultarSaldo()
         {
-            Console.WriteLine($"Saldo da conta corrente {NumeroConta} de {Usuario}: R${Saldo}, Limite de Crédito: R${limitecredito}");
+            Console.WriteLine($"Saldo da conta corrente {numeroConta} de {titular.nome}: R${Saldo}, Limite de Crédito: R${limitecredito}");
         }
         public override void Sacar(double valor)
         {
@@ -50,7 +46,7 @@ namespace Nullbank
                     Saldo -= valor;
                     contaDestino.Saldo += valor;
 
-                    string transacao = $"Transferência de R${valor} para a conta {contaDestino.NumeroConta} (conta corrente)";
+                    string transacao = $"Transferência de R${valor} para a conta {contaDestino.numeroConta} (conta corrente)";
                     historico.Add(transacao);
                     Console.WriteLine(transacao);
                 }

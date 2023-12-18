@@ -1,33 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Nullbank.Usuarios;
 
-namespace Nullbank
+namespace Nullbank.Contas
 {
     abstract class Conta
     {
-        public int NumeroConta;
-        public string Usuario;
+        public int numeroConta;
+        public Cliente titular;
         public double Saldo;
         public List<string> historico;
         public int idade;
         public string senha;
         public int cpf;
+        public static int totalContas = 0;
 
-        public Conta(int numeroConta, string titular, double saldoInicial)
+        public Conta(int numeroConta, Cliente titular, double saldoInicial)
         {
-            NumeroConta = numeroConta;
-            Usuario = titular;
+            this.numeroConta = numeroConta;
+            this.titular = titular;
             Saldo = saldoInicial;
             historico = new List<string>();
+
+            Conta.totalContas++;
 
         }
 
         public void ConsultarSaldo()
         {
-            Console.WriteLine($"Saldo da conta {NumeroConta} de {Usuario}: {Saldo} reais");
+            Console.WriteLine($"Saldo da conta {numeroConta} de {titular.nome}: {Saldo} reais");
         }
         public virtual void Depositar(double valor)
         {
@@ -76,7 +75,7 @@ namespace Nullbank
                     Saldo -= valor;
                     contaDestino.Saldo += valor;
 
-                    string transacao = $"Transferência de R${valor} para a conta {contaDestino.NumeroConta}";
+                    string transacao = $"Transferência de R${valor} para a conta {contaDestino.numeroConta}";
                     historico.Add(transacao);
                     Console.WriteLine(transacao);
                 }
@@ -102,7 +101,7 @@ namespace Nullbank
 
         public void ExibirHistorico()
         {
-            Console.WriteLine($"Histórico de transações da conta {NumeroConta} de {Usuario}:");
+            Console.WriteLine($"Histórico de transações da conta {numeroConta} de {titular.nome}:");
             foreach (var transacao in historico)
             {
                 Console.WriteLine(transacao);

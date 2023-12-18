@@ -1,24 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Nullbank.Usuarios;
 
-namespace Nullbank
+namespace Nullbank.Contas
 {
-    internal class Conta_poupanca : Conta
+    internal class ContaCompartilhada : Conta
     {
-        public double TaxaRendimento { get; }
+        public List<string> UsuariosSecundarios { get; }
 
-        public Conta_poupanca(int NumeroConta, string Usuario, double saldoInicial, double TaxaRendimento) : base(NumeroConta, Usuario, saldoInicial)
+        public ContaCompartilhada(int numeroConta, Cliente titular, double saldoInicial, List<string> UsuariosSecundarios) : base(numeroConta, titular, saldoInicial)
         {
-            this.TaxaRendimento = TaxaRendimento;
+            this.numeroConta = numeroConta;
+            this.UsuariosSecundarios = UsuariosSecundarios;
         }
 
-        public new void ConsultarSaldo()
-        {
-            Console.WriteLine($"Saldo da conta poupança {NumeroConta} de {Usuario}: R${Saldo}, Taxa de Rendimento: {TaxaRendimento}%");
-        }
         public override void Sacar(double valor)
         {
             if (valor > 0)
@@ -26,7 +19,7 @@ namespace Nullbank
                 if (Saldo >= valor)
                 {
                     Saldo -= valor;
-                    string transacao = $"Saque de R${valor} (conta poupança)";
+                    string transacao = $"Saque de R${valor} (conta compartilhada)";
                     historico.Add(transacao);
                     Console.WriteLine(transacao);
                 }
@@ -49,7 +42,7 @@ namespace Nullbank
                     Saldo -= valor;
                     contaDestino.Saldo += valor;
 
-                    string transacao = $"Transferência de R${valor} para a conta {contaDestino.NumeroConta} (conta poupança)";
+                    string transacao = $"Transferência de R${valor} para a conta {contaDestino.numeroConta} (conta compartilhada)";
                     historico.Add(transacao);
                     Console.WriteLine(transacao);
                 }
