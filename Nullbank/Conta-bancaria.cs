@@ -14,7 +14,7 @@ namespace Nullbank
         public List<string> historico;
         public int idade;
 
-        public ContaBancaria(int numeroConta, string titular, double saldoInicial)
+        public Conta(int numeroConta, string titular, double saldoInicial)
         {
             NumeroConta = numeroConta;
             Titular = titular;
@@ -26,6 +26,7 @@ namespace Nullbank
         {
             Console.WriteLine($"Saldo da conta {NumeroConta} de {Titular}: {Saldo} reais");
         }
+
 
 
 
