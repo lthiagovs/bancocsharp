@@ -201,7 +201,7 @@ class Program
 
                     //Opções do Funcionario
                     case 2:
-                        Console.WriteLine("0 - sair\n1 - Criar Cliente\n2 - Buscar cliente\n3 - Editar cliente\n4 - Criar Conta");
+                        Console.WriteLine("0 - Sair\n1 - Criar Cliente\n2 - Buscar cliente\n3 - Editar cliente\n4 - Criar Conta");
                         escolha = Console.ReadLine();
                         switch (int.Parse(escolha))
                         {
