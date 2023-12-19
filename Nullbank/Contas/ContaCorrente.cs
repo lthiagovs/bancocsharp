@@ -1,38 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Nullbank.Usuarios;
 
-namespace Nullbank
+namespace Nullbank.Contas
 {
-    internal class Conta_corrente : Conta
+    internal class ContaCorrente : Conta
     {
         public double limitecredito;
-        public Conta_corrente(int NumeroConta, string Usuario, double saldoInicial, double limitecredito) : base(NumeroConta, Usuario, saldoInicial)
+        public ContaCorrente(int numeroConta, Cliente titular, double saldoInicial, double limitecredito, string senha) : base(numeroConta, titular, saldoInicial, senha)
         {
+
             this.limitecredito = limitecredito;
         }
         public new void ConsultarSaldo()
         {
-            Console.WriteLine($"Saldo da conta corrente {NumeroConta} de {Usuario}: R${Saldo}, Limite de Crédito: R${limitecredito}");
+            Console.WriteLine($"saldo da conta corrente {numeroConta} de {titular.nome}: R${saldo}, Limite de Crédito: R${limitecredito}");
         }
         public override void Sacar(double valor)
         {
             if (valor > 0)
             {
-                double valorTotal = Saldo + limitecredito;
+                double valorTotal = saldo + limitecredito;
                 if (valorTotal >= valor)
                 {
-                    Saldo -= valor;
+                    saldo -= valor;
                     string transacao = $"Saque de R${valor} (conta corrente)";
                     historico.Add(transacao);
                     Console.WriteLine(transacao);
                 }
                 else
                 {
-                    Console.WriteLine("Saldo e limite de crédito insuficientes para realizar o saque.");
+                    Console.WriteLine("saldo e limite de crédito insuficientes para realizar o saque.");
                 }
             }
             else
@@ -44,19 +40,19 @@ namespace Nullbank
         {
             if (valor > 0)
             {
-                double valorTotal = Saldo + limitecredito;
+                double valorTotal = saldo + limitecredito;
                 if (valorTotal >= valor)
                 {
-                    Saldo -= valor;
-                    contaDestino.Saldo += valor;
+                    saldo -= valor;
+                    contaDestino.saldo += valor;
 
-                    string transacao = $"Transferência de R${valor} para a conta {contaDestino.NumeroConta} (conta corrente)";
+                    string transacao = $"Transferência de R${valor} para a conta {contaDestino.numeroConta} (conta corrente)";
                     historico.Add(transacao);
                     Console.WriteLine(transacao);
                 }
                 else
                 {
-                    Console.WriteLine("Saldo e limite de crédito insuficientes para realizar a transferência.");
+                    Console.WriteLine("saldo e limite de crédito insuficientes para realizar a transferência.");
                 }
             }
             else

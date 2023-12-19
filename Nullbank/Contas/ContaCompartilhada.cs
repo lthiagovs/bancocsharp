@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Nullbank.Usuarios;
 
-namespace Nullbank
+namespace Nullbank.Contas
 {
-    internal class Conta_compartilhada : Conta
+    internal class ContaCompartilhada : Conta
     {
         public List<string> UsuariosSecundarios { get; }
 
-        public Conta_compartilhada(int NumeroConta, string Usuario, double saldoInicial, List<string> UsuariosSecundarios) : base(NumeroConta, Usuario, saldoInicial)
+        public ContaCompartilhada(int numeroConta, Cliente titular, double saldoInicial, List<string> UsuariosSecundarios, string senha) : base(numeroConta, titular, saldoInicial, senha)
         {
+            this.numeroConta = numeroConta;
             this.UsuariosSecundarios = UsuariosSecundarios;
         }
 
@@ -19,16 +16,16 @@ namespace Nullbank
         {
             if (valor > 0)
             {
-                if (Saldo >= valor)
+                if (saldo >= valor)
                 {
-                    Saldo -= valor;
+                    saldo -= valor;
                     string transacao = $"Saque de R${valor} (conta compartilhada)";
                     historico.Add(transacao);
                     Console.WriteLine(transacao);
                 }
                 else
                 {
-                    Console.WriteLine("Saldo insuficiente para realizar o saque.");
+                    Console.WriteLine("saldo insuficiente para realizar o saque.");
                 }
             }
             else
@@ -40,18 +37,18 @@ namespace Nullbank
         {
             if (valor > 0)
             {
-                if (Saldo >= valor)
+                if (saldo >= valor)
                 {
-                    Saldo -= valor;
-                    contaDestino.Saldo += valor;
+                    saldo -= valor;
+                    contaDestino.saldo += valor;
 
-                    string transacao = $"Transferência de R${valor} para a conta {contaDestino.NumeroConta} (conta compartilhada)";
+                    string transacao = $"Transferência de R${valor} para a conta {contaDestino.numeroConta} (conta compartilhada)";
                     historico.Add(transacao);
                     Console.WriteLine(transacao);
                 }
                 else
                 {
-                    Console.WriteLine("Saldo insuficiente para realizar a transferência.");
+                    Console.WriteLine("saldo insuficiente para realizar a transferência.");
                 }
             }
             else

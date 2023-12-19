@@ -1,5 +1,5 @@
 ﻿using Nullbank.Usuarios;
-using static System.Net.Mime.MediaTypeNames;
+using Nullbank.Contas;
 
 namespace Nullbank.Arquivos
 {
@@ -165,17 +165,17 @@ namespace Nullbank.Arquivos
         }
 
         //Cria o arquivo de uma conta - @thiago
-        public static void criarArquivoConta(Conta conta)
+        public static void criaArquivoConta(Conta conta)
         {
             try
             {
-                Arquivo aConta = new Arquivo(Arquivo.caminhoContas + conta.NumeroConta + ".data");
+                Arquivo aConta = new Arquivo(Arquivo.caminhoContas + conta.numeroConta + ".data");
                 List<string> dadosLista = new List<string>();
 
-                dadosLista.Add(conta.Usuario);
-                dadosLista.Add(conta.Saldo.ToString());
+                dadosLista.Add(conta.titular.nome);
+                dadosLista.Add(conta.saldo.ToString());
                 dadosLista.Add(conta.idade.ToString());
-                dadosLista.Add(conta.NumeroConta.ToString());
+                dadosLista.Add(conta.numeroConta.ToString());
                 dadosLista.Add(conta.senha);
 
                 aConta.escreverArquivo(dadosLista);
@@ -202,10 +202,10 @@ namespace Nullbank.Arquivos
                         path = "Clientes\\";
                         break;
                     case Gerente:
-                        path = "Funcionarios\\";
+                        path = "Gerentes\\";
                         break;
                     case Funcionario:
-                        path = "Gerentes\\";
+                        path = "Funcionarios\\";
                         break;
                     default:
                         path = "";
@@ -236,13 +236,13 @@ namespace Nullbank.Arquivos
         public static Conta buscaConta(int numero)
         {
             Arquivo contaArquivo = new Arquivo(Arquivo.caminhoContas+numero+".data");
-            Conta_corrente conta = new Conta_corrente(0, "", 0, 0);
+            ContaCorrente conta = new ContaCorrente(-1, null, 0, 0,"");
 
             if (contaArquivo.arquivoExiste())
             {
                 List<string> infoConta = contaArquivo.lerArquivo();
-                conta = new Conta_corrente(numero, infoConta[0], 1,0);
-                conta.senha = infoConta[4];
+                Usuario buscaUsuario = new Cliente(infoConta[0],"",null,0,"");
+                conta = new ContaCorrente(int.Parse(infoConta[3]), Arquivo.buscaUsuario(buscaUsuario) as Cliente, double.Parse(infoConta[1]), 0, infoConta[4]);
 
             }
             return conta;
@@ -281,14 +281,36 @@ namespace Nullbank.Arquivos
 
         }
 
-        public static HashSet<Usuario> pegaUsuario()
+        //Altera as informações de um usuario - @thiago
+        public static bool alteraUsuario(Usuario alterar, Usuario alterado)
         {
-            HashSet<Usuario> listaUsuarios = new HashSet<Usuario>();
 
-            
+            if (!Arquivo.buscaUsuario(alterar).cpf.Equals(""))
+            {
+                Usuario nAlterado = alterado;
+                nAlterado.nome = alterar.nome;
+                Arquivo.criaArquivoUsuario(nAlterado);
+                return true;
+            }
+            return false;
 
-            return listaUsuarios;
         }
+
+        //Altera as informações de uma conta - @thiago
+        public static bool alteraConta(Conta alterar, Conta alterado)
+        {
+
+            if (Arquivo.buscaConta(alterar.numeroConta).numeroConta!=-1)
+            {
+                Conta nAlterado = alterado;
+                nAlterado.numeroConta = alterar.numeroConta;
+                Arquivo.criaArquivoConta(nAlterado);
+                return true;
+            }
+            return false;
+        }
+
+
 
     }
 }

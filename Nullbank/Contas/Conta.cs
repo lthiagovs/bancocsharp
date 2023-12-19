@@ -1,40 +1,39 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Nullbank.Usuarios;
 
-namespace Nullbank
+namespace Nullbank.Contas
 {
     abstract class Conta
     {
-        public int NumeroConta;
-        public string Usuario;
-        public double Saldo;
+        public int numeroConta;
+        public Cliente titular;
+        public double saldo;
         public List<string> historico;
         public int idade;
         public string senha;
         public int cpf;
+        public static int totalContas = 0;
 
-        public Conta(int numeroConta, string titular, double saldoInicial)
+        public Conta(int numeroConta, Cliente titular, double saldoInicial, string senha)
         {
-            NumeroConta = numeroConta;
-            Usuario = titular;
-            Saldo = saldoInicial;
-            historico = new List<string>();
+            this.numeroConta = numeroConta;
+            this.titular = titular;
+            this.saldo = saldoInicial;
+            this.historico = new List<string>();
+
+            Conta.totalContas++;
 
         }
 
         public void ConsultarSaldo()
         {
-            Console.WriteLine($"Saldo da conta {NumeroConta} de {Usuario}: {Saldo} reais");
+            Console.WriteLine($"saldo da conta {numeroConta} de {titular.nome}: {saldo} reais");
         }
         public virtual void Depositar(double valor)
         {
             if (valor > 0)
             {
                 AplicarTaxa();
-                Saldo += valor;
+                saldo += valor;
                 string transacao = $"Depósito de R${valor}";
                 historico.Add(transacao);
                 Console.WriteLine(transacao);
@@ -48,17 +47,17 @@ namespace Nullbank
         {
             if (valor > 0)
             {
-                if (Saldo >= valor)
+                if (saldo >= valor)
                 {
                     AplicarTaxa();
-                    Saldo -= valor;
+                    saldo -= valor;
                     string transacao = $"Saque de R${valor}";
                     historico.Add(transacao);
                     Console.WriteLine(transacao);
                 }
                 else
                 {
-                    Console.WriteLine("Saldo insuficiente para realizar o saque.");
+                    Console.WriteLine("saldo insuficiente para realizar o saque.");
                 }
             }
             else
@@ -70,19 +69,19 @@ namespace Nullbank
         {
             if (valor > 0)
             {
-                if (Saldo >= valor)
+                if (saldo >= valor)
                 {
                     AplicarTaxa();
-                    Saldo -= valor;
-                    contaDestino.Saldo += valor;
+                    saldo -= valor;
+                    contaDestino.saldo += valor;
 
-                    string transacao = $"Transferência de R${valor} para a conta {contaDestino.NumeroConta}";
+                    string transacao = $"Transferência de R${valor} para a conta {contaDestino.numeroConta}";
                     historico.Add(transacao);
                     Console.WriteLine(transacao);
                 }
                 else
                 {
-                    Console.WriteLine("Saldo insuficiente para realizar a transferência.");
+                    Console.WriteLine("saldo insuficiente para realizar a transferência.");
                 }
             }
             else
@@ -102,7 +101,7 @@ namespace Nullbank
 
         public void ExibirHistorico()
         {
-            Console.WriteLine($"Histórico de transações da conta {NumeroConta} de {Usuario}:");
+            Console.WriteLine($"Histórico de transações da conta {numeroConta} de {titular.nome}:");
             foreach (var transacao in historico)
             {
                 Console.WriteLine(transacao);
