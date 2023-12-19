@@ -10,6 +10,13 @@ namespace Nullbank.Contas
 
             this.limitecredito = limitecredito;
         }
+        
+        //Permite criar uma conta corrente vazia
+        public ContaCorrente()
+        {
+
+        }
+
         public new void ConsultarSaldo()
         {
             Console.WriteLine($"saldo da conta corrente {numeroConta} de {titular.nome}: R${saldo}, Limite de Crédito: R${limitecredito}");

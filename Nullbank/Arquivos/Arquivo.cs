@@ -15,9 +15,9 @@ namespace Nullbank.Arquivos
         private string caminho;
 
         //Variaveis nescessárias para alterar arquivos - @thiago
-        private Stream entrada;
-        private StreamReader leitor;
-        private StreamWriter escritor;
+        private Stream? entrada;
+        private StreamReader? leitor;
+        private StreamWriter? escritor;
 
         //Construtor da classe Arquivo - @thiago
         private Arquivo(string caminho)
@@ -106,7 +106,7 @@ namespace Nullbank.Arquivos
         //Encerra o arquivo - @thiago
         private void fecharArquivo()
         {
-            this.entrada.Close();
+            if(this.entrada!=null) this.entrada.Close();
         }
 
         //Escreve dados em um arquivo - @thiago
@@ -116,14 +116,25 @@ namespace Nullbank.Arquivos
             {
                 this.criaArquivo();
                 this.abrirArquivo();
-                this.escritor = new StreamWriter(this.entrada);
 
-                foreach (string dado in dadosLista)
+                if (this.entrada != null)
                 {
-                    escritor.Write(dado + ",");
+                    this.escritor = new StreamWriter(this.entrada);
+                }
+                else
+                {
+                    throw new Exception("Não foi possivel realizar a escrita.");
                 }
 
-                this.escritor.Close();
+                if (this.escritor != null)
+                {
+                    foreach (string dado in dadosLista)
+                    {
+                        escritor.Write(dado + ",");
+                    }
+
+                    this.escritor.Close();
+                }
             }
             catch
             {
@@ -142,7 +153,7 @@ namespace Nullbank.Arquivos
 
             List<string> data = new List<string>();
 
-            if (this.abrirArquivo())
+            if (this.abrirArquivo() && this.entrada != null)
             {
                 try
                 {
@@ -215,7 +226,7 @@ namespace Nullbank.Arquivos
 
                 //Selecionar diretorio de usuario correto de acordo com o tipo do usuario
                 string path;
-                switch (usuario)
+                switch(usuario)
                 {
                     case Cliente:
                         path = "Clientes\\";
@@ -261,19 +272,19 @@ namespace Nullbank.Arquivos
             {
 
                 case ContaCompartilhada:
-                    contaBusca = new ContaCompartilhada(-1, null, 0, new List<string>(), "");
+                    contaBusca = new ContaCompartilhada(-1, new Cliente(), 0, new List<string>(), "");
                     path = "Compartilhada\\";
                     break;
                 case ContaCorrente:
-                    contaBusca = new ContaCorrente(-1, null, 0, 0, "");
+                    contaBusca = new ContaCorrente(-1, new Cliente(), 0, 0, "");
                     path = "Corrente\\";
                     break;
                 case ContaPoupanca:
-                    contaBusca = new ContaPoupanca(-1, null, 0, 0, "");
+                    contaBusca = new ContaPoupanca(-1, new Cliente(), 0, 0, "");
                     path = "Poupanca\\";
                     break;
                 default:
-                    contaBusca = new ContaCorrente(-1, null, 0, 0, "");
+                    contaBusca = new ContaCorrente(-1, new Cliente(), 0, 0, "");
                     path = "Corrente\\";
                     break;
 
@@ -284,27 +295,33 @@ namespace Nullbank.Arquivos
             if (contaArquivo.arquivoExiste())
             {
                 List<string> infoConta = contaArquivo.lerArquivo();
-                Cliente buscaUsuario = new Cliente(infoConta[0],"",null,0,"");
-                switch (conta)
+                Cliente? buscaUsuario = new Cliente(infoConta[0],"",new Endereço(),0,"");
+
+                buscaUsuario = Arquivo.buscaUsuario(buscaUsuario) as Cliente;
+
+                if (buscaUsuario != null)
                 {
+                    switch (conta)
+                    {
 
-                    case ContaCompartilhada:
-                        contaBusca = new ContaCompartilhada(int.Parse(infoConta[3]), Arquivo.buscaUsuario(buscaUsuario) as Cliente, double.Parse(infoConta[1]), new List<string>(), infoConta[4]);
-                        path = "Compartilhada\\";
-                        break;
-                    case ContaCorrente:
-                        contaBusca = new ContaCorrente(int.Parse(infoConta[3]), Arquivo.buscaUsuario(buscaUsuario) as Cliente, double.Parse(infoConta[1]), 0, infoConta[4]);
-                        path = "Corrente\\";
-                        break;
-                    case ContaPoupanca:
-                        contaBusca = new ContaPoupanca(int.Parse(infoConta[3]), Arquivo.buscaUsuario(buscaUsuario) as Cliente, double.Parse(infoConta[1]), 0, infoConta[4]);
-                        path = "Poupanca\\";
-                        break;
-                    default:
-                        contaBusca = new ContaCorrente(int.Parse(infoConta[3]), Arquivo.buscaUsuario(buscaUsuario) as Cliente, double.Parse(infoConta[1]), 0, infoConta[4]);
-                        path = "Corrente\\";
-                        break;
+                        case ContaCompartilhada:
+                            contaBusca = new ContaCompartilhada(int.Parse(infoConta[3]), buscaUsuario, double.Parse(infoConta[1]), new List<string>(), infoConta[4]);
+                            path = "Compartilhada\\";
+                            break;
+                        case ContaCorrente:
+                            contaBusca = new ContaCorrente(int.Parse(infoConta[3]), buscaUsuario, double.Parse(infoConta[1]), 0, infoConta[4]);
+                            path = "Corrente\\";
+                            break;
+                        case ContaPoupanca:
+                            contaBusca = new ContaPoupanca(int.Parse(infoConta[3]), buscaUsuario, double.Parse(infoConta[1]), 0, infoConta[4]);
+                            path = "Poupanca\\";
+                            break;
+                        default:
+                            contaBusca = new ContaCorrente(int.Parse(infoConta[3]), buscaUsuario, double.Parse(infoConta[1]), 0, infoConta[4]);
+                            path = "Corrente\\";
+                            break;
 
+                    }
                 }
 
             }

@@ -8,11 +8,11 @@ namespace Nullbank.Contas
         public Cliente titular;
         public double saldo;
         public List<string> historico;
-        public int idade;
         public string senha;
         public int cpf;
         public static int totalContas = 0;
 
+        //Construtor de Conta
         public Conta(int numeroConta, Cliente titular, double saldoInicial, string senha)
         {
             this.numeroConta = numeroConta;
@@ -25,10 +25,23 @@ namespace Nullbank.Contas
 
         }
 
+        //Permite criar uma conta vazia
+        public Conta()
+        {
+            this.titular = new Cliente();
+            this.cpf = -1;
+            this.historico = new List<string>();
+            this.senha = "";
+
+        }
+
+        //Consulta o saldo
         public void ConsultarSaldo()
         {
             Console.WriteLine($"saldo da conta {numeroConta} de {titular.nome}: {saldo} reais");
         }
+        
+        //Deposita de maneira segura
         public virtual void Depositar(double valor)
         {
             if (valor > 0)
@@ -44,6 +57,8 @@ namespace Nullbank.Contas
                 Console.WriteLine("O valor do depósito deve ser maior que zero.");
             };
         }
+        
+        //Realiza o Saque de maneira segura
         public virtual void Sacar(double valor)
         {
             if (valor > 0)
@@ -66,6 +81,8 @@ namespace Nullbank.Contas
                 Console.WriteLine("O valor do saque deve ser maior que zero.");
             }
         }
+        
+        //Realiza Transferencias (inacabado)
         public virtual void Transferir(Conta contaDestino, double valor)
         {
             if (valor > 0)
@@ -90,16 +107,20 @@ namespace Nullbank.Contas
                 Console.WriteLine("O valor da transferência deve ser maior que zero.");
             }
         }
+
+        //Aplica taxas (inacabado)
         protected virtual void AplicarTaxa()
         {
           
         }
 
+        //Adiciona transações no historico
         protected void AdicionarHistorico(string transacao)
         {
             historico.Add(transacao);
         }
 
+        //Exibe o historico
         public void ExibirHistorico()
         {
             Console.WriteLine($"Histórico de transações da conta {numeroConta} de {titular.nome}:");

@@ -19,5 +19,15 @@
             this.estado = estado;
         }
 
+        //Permite criar um Endereço vazio
+        public Endereço()
+        {
+            this.cep = "";
+            this.numero = -1;
+            this.rua = "";
+            this.cidade = "";
+            this.estado = "";
+        }
+
     }
 }

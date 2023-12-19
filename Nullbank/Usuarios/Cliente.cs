@@ -9,11 +9,19 @@
 
         }
 
+        //Permite criar um Cliente vazio
+        public Cliente()
+        {
+
+        }
+
+
         //Acessa uma das contas do Cliente  - @thiago
         public void acessaConta(string senha)
         {
 
         }
+
 
     }
 }

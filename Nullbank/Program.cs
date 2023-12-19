@@ -4,44 +4,55 @@ using Nullbank.Usuarios;
 class Program
 {
 
-    /// <summary>
-    ///     Editar Clientes
-    ///     Tipos de Conta nos Arquivos e na interface
-    ///     Contas Conjuntas
-    ///     Polimento de Interface
-    ///     Remoção de Warnings e Comentarios
-    /// </summary>
+    //Leitura segura no console
+    public static string lerLinha(string mensagem)
+    {
+        Console.Write(mensagem);
+        var leitura = Console.ReadLine();
+        
+        if(leitura is string)
+        {
+            return leitura.ToString();
+        }
+
+        return "";
+    }
+
+    //Leitura de digitos segura no console
+    public static int lerDigito(string mensagem)
+    {
+        int digito = -1;
+
+        do
+        {
+            string leitura = lerLinha(mensagem);
+            try
+            {
+                digito = int.Parse(leitura);
+            }
+            catch
+            {
+                Console.WriteLine("Valor não numerico ou menor que zero! Digite novamente...");
+                digito = -1;
+            }
+
+        } while (digito == -1 || digito < 0);
+
+        return digito;
+    }
 
     //Cria um formulario de cadastro de funcionario no console
     public static Funcionario cadastrarFuncionario()
     {
-        Console.Write("CPF >> ");
-        string cpf = Console.ReadLine();
-
-        Console.Write("NOME >> ");
-        string nome = Console.ReadLine();
-
-        Console.Write("CEP >> ");
-        string cep = Console.ReadLine();
-
-        Console.Write("NUMERO >> ");
-        int num = int.Parse(Console.ReadLine());
-
-        Console.Write("RUA >> ");
-        string rua = Console.ReadLine();
-
-        Console.Write("CIDADE >> ");
-        string cidade = Console.ReadLine();
-
-        Console.Write("ESTADO >> ");
-        string estado = Console.ReadLine();
-
-        Console.Write("AGENCIA >> ");
-        int agencia = int.Parse(Console.ReadLine());
-
-        Console.Write("SENHA >> ");
-        string senha = Console.ReadLine();
-
+        string cpf = lerLinha("CPF >> ");
+        string nome = lerLinha("NOME >> ");
+        string cep = lerLinha("CEP >> ");
+        int num = lerDigito("NUMERO >> ");
+        string rua = lerLinha("RUA >> ");
+        string cidade = lerLinha("CIDADE >> ");
+        string estado = lerLinha("ESTADO >> ");
+        int agencia = lerDigito("AGENCIA >> ");
+        string senha = lerLinha("SENHA >> ");
         Endereço funcionarioEndereço = new Endereço(cep, num, rua, cidade, estado);
         Funcionario nFuncionario = new Funcionario(nome, cpf, funcionarioEndereço, agencia, senha);
 
@@ -51,47 +62,30 @@ class Program
     //Cria um formulario de cadastro de Cliente no console
     public static Cliente cadastrarCliente()
     {
-        Console.Write("CPF >> ");
-        string cpf = Console.ReadLine();
-
-        Console.Write("NOME >> ");
-        string nome = Console.ReadLine();
-
-        Console.Write("CEP >> ");
-        string cep = Console.ReadLine();
-
-        Console.Write("NUMERO >> ");
-        int num = int.Parse(Console.ReadLine());
-
-        Console.Write("RUA >> ");
-        string rua = Console.ReadLine();
-
-        Console.Write("CIDADE >> ");
-        string cidade = Console.ReadLine();
-
-        Console.Write("ESTADO >> ");
-        string estado = Console.ReadLine();
-
-        Console.Write("AGENCIA >> ");
-        int agencia = int.Parse(Console.ReadLine());
-
-        Console.Write("SENHA >> ");
-        string senha = Console.ReadLine();
-
+        string cpf = lerLinha("CPF >> ");
+        string nome = lerLinha("NOME >> ");
+        string cep = lerLinha("CEP >> ");
+        int num = lerDigito("NUMERO >> ");
+        string rua = lerLinha("RUA >> ");
+        string cidade = lerLinha("CIDADE >> ");
+        string estado = lerLinha("ESTADO >> ");
+        int agencia = lerDigito("AGENCIA >> ");
+        string senha = lerLinha("SENHA >> ");
         Endereço funcionarioEndereço = new Endereço(cep, num, rua, cidade, estado);
-        Cliente nFuncionario = new Cliente(nome, cpf, funcionarioEndereço, agencia, senha);
+        Cliente nCliente = new Cliente(nome, cpf, funcionarioEndereço, agencia, senha);
 
-        return nFuncionario;
+        return nCliente;
     }
 
+    //Função Principal
     public static void Main()
     {
 
         bool rodar = true;
         bool logado = false;
         bool acessaConta = false;
-        Usuario usuario = null;
-        Conta conta = null;
+        Usuario usuario = new Cliente();
+        Conta conta = new ContaCorrente();
         int tipo = 0;
         string escolha;
 
@@ -109,9 +103,8 @@ class Program
                     //Opções do Gerente
                     case 3:
                         Console.WriteLine("0 - Sair\n1 - Criar Funcionario\n2 - Buscar Funcionario\n3 - Editar Funcionario");
-                        escolha = Console.ReadLine();
-
-                        switch (int.Parse(escolha))
+                        int funcEscolha = lerDigito(" >> ");
+                        switch (funcEscolha)
                         {
 
                             //LogOff
@@ -126,11 +119,9 @@ class Program
 
                             //Buscar Funcionario
                             case 2 or 3:
+                                string nomeFuncionario = lerLinha("NOME >> ");
 
-                                Console.Write("NOME >> ");
-                                string nomeFuncionario = Console.ReadLine();
-
-                                Usuario funcBusca = new Funcionario(nomeFuncionario, "", null, 1, "");
+                                Usuario funcBusca = new Funcionario(nomeFuncionario, "", new Endereço(), 1, "");
                                 funcBusca = Arquivo.buscaUsuario(funcBusca);
 
                                 if (!funcBusca.cpf.Equals(""))
@@ -139,7 +130,7 @@ class Program
                                     Console.WriteLine("Nome: " + funcBusca.nome);
                                     Console.WriteLine("CPF:" + funcBusca.cpf);
                                     Console.WriteLine("Agencia: " + funcBusca.agencia);
-                                    if (int.Parse(escolha) == 3)
+                                    if (funcEscolha == 3)
                                     {
                                         Console.WriteLine("Digite agora as novas informações: ");
                                         Funcionario alterado = cadastrarFuncionario();
@@ -167,8 +158,7 @@ class Program
                         if (!acessaConta)
                         {
                             Console.WriteLine("0 - Sair\n1 - Acessar Conta");
-                            escolha = Console.ReadLine();
-                            switch (int.Parse(escolha))
+                            switch (lerDigito(" >> "))
                             {
                                 case 0:
                                     Console.WriteLine("LogOut efetuado!");
@@ -177,27 +167,23 @@ class Program
 
                                 case 1:
 
-                                    Console.Write("NUMERO >> ");
-                                    int numeroConta = int.Parse(Console.ReadLine());
-                                    Conta buscaConta = new ContaCorrente(numeroConta,null,0,0,"");
-                                    Console.Write("SENHA >> ");
-                                    string senha = Console.ReadLine();
+                                    int numeroConta = lerDigito("NUMERO >> ");
+                                    Conta buscaConta = new ContaCorrente(numeroConta,new Cliente(),0,0,"");
+                                    string senha = lerLinha("SENHA >> ");
                                     Console.WriteLine("1 - Corrente\n2 - Poupança\n3 - Compartilhada\n");
-                                    int tipoLogin = int.Parse(Console.ReadLine());
+                                    int tipoLogin = lerDigito(" >> ");
 
                                     switch (tipoLogin)
                                     {
-                                        case 1:
-                                            buscaConta = new ContaCorrente(numeroConta, null, 0, 0, "");
-                                            break;
+
                                         case 2:
-                                            buscaConta = new ContaPoupanca(numeroConta, null, 0, 0, "");
+                                            buscaConta = new ContaPoupanca(numeroConta, new Cliente(), 0, 0, "");
                                             break;
                                         case 3:
-                                            buscaConta = new ContaCompartilhada(numeroConta, null, 0, new List<string>(), "");
+                                            buscaConta = new ContaCompartilhada(numeroConta, new Cliente(), 0, new List<string>(), "");
                                             break;
                                         default:
-                                            buscaConta = new ContaCorrente(numeroConta, null, 0, 0, "");
+                                            buscaConta = new ContaCorrente(numeroConta, new Cliente(), 0, 0, "");
                                             break;
                                     }
 
@@ -229,10 +215,9 @@ class Program
                         //Conta acessada
                         else
                         {
-                            Console.WriteLine("saldo da conta: R$"+conta.saldo+"\n0 - Sair\n1 - Sacar\n2 - Depositar\n3 - Transferir");
-                            escolha = Console.ReadLine();
+                            Console.WriteLine("Saldo da conta: R$"+conta.saldo+"\n0 - Sair\n1 - Sacar\n2 - Depositar\n3 - Transferir");
 
-                            switch (int.Parse(escolha))
+                            switch (lerDigito(" >> "))
                             {
                                 case 0:
                                     Arquivo.alteraConta(Arquivo.buscaConta(conta), conta);
@@ -240,23 +225,21 @@ class Program
                                     break;
                                 case 1:
                                     Console.WriteLine("Digite o valor que deseja sacar: ");
-                                    escolha = Console.ReadLine();
-                                    conta.Sacar(double.Parse(escolha));
+                                    conta.Sacar(lerDigito(" >> "));
                                     break;
                                 case 2:
                                     Console.WriteLine("Digite o valor que deseja Depositar: ");
-                                    escolha = Console.ReadLine();
-                                    conta.Depositar(int.Parse(escolha));
+                                    conta.Depositar(lerDigito(" >> "));
                                     break;
                                 case 3:
                                     Console.WriteLine("Digite o valor que deseja transferir: ");
-                                    escolha = Console.ReadLine();
-                                    conta.Transferir(null, double.Parse(escolha));
+                                    conta.Transferir(new ContaCorrente(), lerDigito(" >> "));
                                     break;
                                 default:
                                     break;
 
                             }
+                            Console.ReadLine();
 
                         }
                         Console.Clear();
@@ -265,8 +248,8 @@ class Program
                     //Opções do Funcionario
                     case 2:
                         Console.WriteLine("0 - Sair\n1 - Criar Cliente\n2 - Buscar cliente\n3 - Editar cliente\n4 - Criar Conta");
-                        escolha = Console.ReadLine();
-                        switch (int.Parse(escolha))
+                        int selec = lerDigito(" >> ");
+                        switch (selec)
                         {
                             case 0:
                                 Console.WriteLine("LogOut efetuado!");
@@ -282,11 +265,9 @@ class Program
                                 Console.ReadLine();
                                 break;
                             case 2 or 3:
+                                string nomeFuncionario = lerLinha("NOME >> ");
 
-                                Console.Write("NOME >> ");
-                                string nomeFuncionario = Console.ReadLine();
-
-                                Usuario clienteBusca = new Cliente(nomeFuncionario, "", null, 1, "");
+                                Usuario clienteBusca = new Cliente(nomeFuncionario, "", new Endereço(), 1, "");
                                 clienteBusca = Arquivo.buscaUsuario(clienteBusca);
 
                                 if (!clienteBusca.cpf.Equals(""))
@@ -295,7 +276,7 @@ class Program
                                     Console.WriteLine("Nome: " + clienteBusca.nome);
                                     Console.WriteLine("CPF:" + clienteBusca.cpf);
                                     Console.WriteLine("Agencia: " + clienteBusca.agencia);
-                                    if (int.Parse(escolha) == 3)
+                                    if (selec == 3)
                                     {
                                         Console.WriteLine("Digite agora as novas informações: ");
                                         Cliente alterado = cadastrarCliente();
@@ -313,72 +294,80 @@ class Program
                                 Console.ReadLine();
                                 break;
                             case 4:
-                                Console.Write("NOME DO TITULAR >> ");
-                                string nomeConta = Console.ReadLine();
-                                Usuario usuarioConta = new Cliente(nomeConta,"",null,0,"");
-                                usuarioConta = Arquivo.buscaUsuario(usuarioConta);
+                                string nomeConta = lerLinha("NOME DO TITULAR >> ");
+                                Cliente? usuarioConta = new Cliente(nomeConta,"",new Endereço(),0,"");
+                                usuarioConta = Arquivo.buscaUsuario(usuarioConta) as Cliente;
 
-                                if (!usuarioConta.cpf.Equals(""))
+                                if (usuarioConta != null)
                                 {
-                                    Console.WriteLine("Titular de cpf: "+usuarioConta.cpf+" encontrado!");
-                                    Console.Write("SENHA >> ");
-                                    string contaSenha = Console.ReadLine();
-                                    Console.WriteLine("1 - Corrente\n2 - Poupança\n3 - Compartilhada\n");
-                                    Console.Write("TIPO >> ");
-                                    int tipoConta = int.Parse(Console.ReadLine());
-                                    Conta contaCriar;
-
-                                    switch (tipoConta)
+                                    if (!usuarioConta.cpf.Equals("") && usuarioConta is Cliente)
                                     {
-                                        case 1:
-                                            contaCriar = new ContaCorrente(Conta.totalContas, usuarioConta as Cliente, 0, 0, contaSenha);
-                                            break;
-                                        case 2:
-                                            contaCriar = new ContaPoupanca(Conta.totalContas, usuarioConta as Cliente, 0, 0, contaSenha);
-                                            break;
-                                        case 3:
-                                            contaCriar = new ContaCompartilhada(Conta.totalContas, usuarioConta as Cliente, 0, new List<string>(), contaSenha);
-                                            ContaCompartilhada contaCriarCompartilhada = contaCriar as ContaCompartilhada;
-                                            do
-                                            {
-                                                Console.WriteLine("0 - Finalizar\nDigite o nome de um dos titulares: ");
-                                                escolha = Console.ReadLine();
+                                        Console.WriteLine("Titular de cpf: " + usuarioConta.cpf + " encontrado!");
+                                        string contaSenha = lerLinha("SENHA >> ");
+                                        Console.WriteLine("1 - Corrente\n2 - Poupança\n3 - Compartilhada\n");
+                                        int tipoConta = lerDigito("TIPO >> ");
+                                        Conta contaCriar = new ContaCorrente();
 
-                                                Usuario titularBusca = new Cliente(escolha,"",null,0,"");
-                                                titularBusca = Arquivo.buscaUsuario(titularBusca);
-
-                                                if (!escolha.Equals("0")) {
-                                                    if (!titularBusca.cpf.Equals(""))
+                                        switch (tipoConta)
+                                        {
+                                            case 1:
+                                                contaCriar = new ContaCorrente(Conta.totalContas, usuarioConta as Cliente, 0, 0, contaSenha);
+                                                break;
+                                            case 2:
+                                                contaCriar = new ContaPoupanca(Conta.totalContas, usuarioConta as Cliente, 0, 0, contaSenha);
+                                                break;
+                                            case 3:
+                                                contaCriar = new ContaCompartilhada(Conta.totalContas, usuarioConta as Cliente, 0, new List<string>(), contaSenha);
+                                                ContaCompartilhada? contaCriarCompartilhada = contaCriar as ContaCompartilhada;
+                                                if (contaCriarCompartilhada != null)
+                                                {
+                                                    do
                                                     {
-                                                        Console.WriteLine("Titular adicionado à conta!");
-                                                        contaCriarCompartilhada.usuariosSecundarios.Add(titularBusca.nome);
+                                                        Console.WriteLine("0 - Finalizar\nDigite o nome de um dos titulares: ");
+                                                        escolha = lerLinha(" >> ");
 
-                                                    }
-                                                    else
-                                                    {
-                                                        Console.WriteLine("Titular não encontrado!");
-                                                    }
-                                                    Console.ReadLine();
+                                                        Usuario titularBusca = new Cliente(escolha, "", new Endereço(), 0, "");
+                                                        titularBusca = Arquivo.buscaUsuario(titularBusca);
+
+                                                        if (!escolha.Equals("0"))
+                                                        {
+                                                            if (!titularBusca.cpf.Equals(""))
+                                                            {
+                                                                Console.WriteLine("Titular adicionado à conta!");
+                                                                contaCriarCompartilhada.usuariosSecundarios.Add(titularBusca.nome);
+
+                                                            }
+                                                            else
+                                                            {
+                                                                Console.WriteLine("Titular não encontrado!");
+                                                            }
+                                                            Console.ReadLine();
+                                                        }
+
+
+                                                    } while (!escolha.Equals("0"));
+                                                    contaCriar = contaCriarCompartilhada;
                                                 }
+                                                else
+                                                {
+                                                    Console.WriteLine("Erro ao criar conta compartilhada...");
+                                                }
+                                                break;
+                                            default:
+                                                contaCriar = new ContaCorrente(Conta.totalContas, usuarioConta as Cliente, 0, 0, contaSenha);
+                                                break;
+                                        }
+
+                                        Arquivo.criaArquivoConta(contaCriar);
+
+                                        Console.WriteLine("Conta de numero: " + contaCriar.numeroConta + " criada com sucesso!");
 
 
-                                            } while (!escolha.Equals("0"));
-                                            contaCriar = contaCriarCompartilhada;
-                                            break;
-                                        default:
-                                            contaCriar = new ContaCorrente(Conta.totalContas, usuarioConta as Cliente, 0, 0, contaSenha);
-                                            break;
                                     }
-
-                                    Arquivo.criaArquivoConta(contaCriar);
-
-                                    Console.WriteLine("Conta de numero: " + contaCriar.numeroConta + " criada com sucesso!");
-
-
-                                }
-                                else
-                                {
-                                    Console.WriteLine("Este titular não existe.");
+                                    else
+                                    {
+                                        Console.WriteLine("Este titular não existe.");
+                                    }
                                 }
 
                                 Console.ReadLine();
@@ -398,14 +387,11 @@ class Program
             {
                 //Sistema de Login
                 Console.WriteLine("Realize o login:\n0 - Sair\n1 - Clientes\n2 - Funcionarios\n3 - Gerentes");
-                Console.Write("Opção >> ");
-                escolha = Console.ReadLine();
+                escolha = lerLinha("Opção >> ");
                 if (int.Parse(escolha) != 0)
                 {
-                    Console.Write("Login >> ");
-                    string login = Console.ReadLine();
-                    Console.Write("Senha >> ");
-                    string senha = Console.ReadLine();
+                    string login = lerLinha("Login >> ");
+                    string senha = lerLinha("Senha >> ");
                     Usuario user = new Cliente(login, "", new Endereço("", 0, "", "", ""), 0, "");
 
                     //Instanciando usuario vazio para iniciar busca / baseado no tipo

@@ -28,7 +28,14 @@
             this.senha = senha;
         }
 
+        //Permite criar um Usuario vazio
+        public Usuario()
+        {
+            this.nome = "";
+            this.cpf = "";
+            this.senha = "";
+            this.endereço = new Endereço();
 
-
+        }
     }
 }
