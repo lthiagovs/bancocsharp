@@ -19,6 +19,7 @@ namespace Nullbank.Contas
             this.titular = titular;
             this.saldo = saldoInicial;
             this.historico = new List<string>();
+            this.senha = senha;
 
             Conta.totalContas++;
 

@@ -2,7 +2,7 @@
 
 namespace Nullbank.Contas
 {
-    internal class ContaCorrente : Conta
+    class ContaCorrente : Conta
     {
         public double limitecredito;
         public ContaCorrente(int numeroConta, Cliente titular, double saldoInicial, double limitecredito, string senha) : base(numeroConta, titular, saldoInicial, senha)

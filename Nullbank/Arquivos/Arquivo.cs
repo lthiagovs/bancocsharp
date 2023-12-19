@@ -1,5 +1,6 @@
 ﻿using Nullbank.Usuarios;
 using Nullbank.Contas;
+using System.ComponentModel;
 
 namespace Nullbank.Arquivos
 {
@@ -27,6 +28,9 @@ namespace Nullbank.Arquivos
             if (!Directory.Exists(Arquivo.caminhoContas))
             {
                 Directory.CreateDirectory(Arquivo.caminhoContas);
+                Directory.CreateDirectory(Arquivo.caminhoContas+"\\Corrente");
+                Directory.CreateDirectory(Arquivo.caminhoContas+"\\Compartilhada");
+                Directory.CreateDirectory(Arquivo.caminhoContas+"\\Poupanca");
             }
 
             //Verifica se os diretorios caminhoUsuarios existe
@@ -169,7 +173,22 @@ namespace Nullbank.Arquivos
         {
             try
             {
-                Arquivo aConta = new Arquivo(Arquivo.caminhoContas + conta.numeroConta + ".data");
+
+                string path = "";
+                switch (conta)
+                {
+                    case ContaCompartilhada:
+                        path = "Compartilhada\\";
+                        break;
+                    case ContaCorrente:
+                        path = "Corrente\\";
+                        break;
+                    case ContaPoupanca:
+                        path = "Poupanca\\";
+                        break;
+                }
+
+                Arquivo aConta = new Arquivo(Arquivo.caminhoContas + path + conta.numeroConta + ".data");
                 List<string> dadosLista = new List<string>();
 
                 dadosLista.Add(conta.titular.nome);
@@ -233,19 +252,63 @@ namespace Nullbank.Arquivos
         }
 
         //Procura uma conta nos arquivos - @thiago
-        public static Conta buscaConta(int numero)
+        public static Conta buscaConta(Conta conta)
         {
-            Arquivo contaArquivo = new Arquivo(Arquivo.caminhoContas+numero+".data");
-            ContaCorrente conta = new ContaCorrente(-1, null, 0, 0,"");
+            string path = "";
+            Conta contaBusca;
+
+            switch (conta)
+            {
+
+                case ContaCompartilhada:
+                    contaBusca = new ContaCompartilhada(-1, null, 0, new List<string>(), "");
+                    path = "Compartilhada\\";
+                    break;
+                case ContaCorrente:
+                    contaBusca = new ContaCorrente(-1, null, 0, 0, "");
+                    path = "Corrente\\";
+                    break;
+                case ContaPoupanca:
+                    contaBusca = new ContaPoupanca(-1, null, 0, 0, "");
+                    path = "Poupanca\\";
+                    break;
+                default:
+                    contaBusca = new ContaCorrente(-1, null, 0, 0, "");
+                    path = "Corrente\\";
+                    break;
+
+            }
+
+            Arquivo contaArquivo = new Arquivo(Arquivo.caminhoContas+path+conta.numeroConta+".data");
 
             if (contaArquivo.arquivoExiste())
             {
                 List<string> infoConta = contaArquivo.lerArquivo();
-                Usuario buscaUsuario = new Cliente(infoConta[0],"",null,0,"");
-                conta = new ContaCorrente(int.Parse(infoConta[3]), Arquivo.buscaUsuario(buscaUsuario) as Cliente, double.Parse(infoConta[1]), 0, infoConta[4]);
+                Cliente buscaUsuario = new Cliente(infoConta[0],"",null,0,"");
+                switch (conta)
+                {
+
+                    case ContaCompartilhada:
+                        contaBusca = new ContaCompartilhada(int.Parse(infoConta[3]), Arquivo.buscaUsuario(buscaUsuario) as Cliente, double.Parse(infoConta[1]), new List<string>(), infoConta[4]);
+                        path = "Compartilhada\\";
+                        break;
+                    case ContaCorrente:
+                        contaBusca = new ContaCorrente(int.Parse(infoConta[3]), Arquivo.buscaUsuario(buscaUsuario) as Cliente, double.Parse(infoConta[1]), 0, infoConta[4]);
+                        path = "Corrente\\";
+                        break;
+                    case ContaPoupanca:
+                        contaBusca = new ContaPoupanca(int.Parse(infoConta[3]), Arquivo.buscaUsuario(buscaUsuario) as Cliente, double.Parse(infoConta[1]), 0, infoConta[4]);
+                        path = "Poupanca\\";
+                        break;
+                    default:
+                        contaBusca = new ContaCorrente(int.Parse(infoConta[3]), Arquivo.buscaUsuario(buscaUsuario) as Cliente, double.Parse(infoConta[1]), 0, infoConta[4]);
+                        path = "Corrente\\";
+                        break;
+
+                }
 
             }
-            return conta;
+            return contaBusca;
         }
 
         //Procura um usuario nos arquivos - @thiago
@@ -300,7 +363,7 @@ namespace Nullbank.Arquivos
         public static bool alteraConta(Conta alterar, Conta alterado)
         {
 
-            if (Arquivo.buscaConta(alterar.numeroConta).numeroConta!=-1)
+            if (Arquivo.buscaConta(alterar).numeroConta!=-1)
             {
                 Conta nAlterado = alterado;
                 nAlterado.numeroConta = alterar.numeroConta;

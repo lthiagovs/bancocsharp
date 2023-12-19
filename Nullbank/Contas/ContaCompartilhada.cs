@@ -2,14 +2,14 @@
 
 namespace Nullbank.Contas
 {
-    internal class ContaCompartilhada : Conta
+    class ContaCompartilhada : Conta
     {
-        public List<string> UsuariosSecundarios { get; }
+        public List<string> usuariosSecundarios;
 
         public ContaCompartilhada(int numeroConta, Cliente titular, double saldoInicial, List<string> UsuariosSecundarios, string senha) : base(numeroConta, titular, saldoInicial, senha)
         {
             this.numeroConta = numeroConta;
-            this.UsuariosSecundarios = UsuariosSecundarios;
+            this.usuariosSecundarios = UsuariosSecundarios;
         }
 
         public override void Sacar(double valor)
