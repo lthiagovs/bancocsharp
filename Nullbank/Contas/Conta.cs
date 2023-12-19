@@ -6,19 +6,19 @@ namespace Nullbank.Contas
     {
         public int numeroConta;
         public Cliente titular;
-        public double Saldo;
+        public double saldo;
         public List<string> historico;
         public int idade;
         public string senha;
         public int cpf;
         public static int totalContas = 0;
 
-        public Conta(int numeroConta, Cliente titular, double saldoInicial)
+        public Conta(int numeroConta, Cliente titular, double saldoInicial, string senha)
         {
             this.numeroConta = numeroConta;
             this.titular = titular;
-            Saldo = saldoInicial;
-            historico = new List<string>();
+            this.saldo = saldoInicial;
+            this.historico = new List<string>();
 
             Conta.totalContas++;
 
@@ -26,14 +26,14 @@ namespace Nullbank.Contas
 
         public void ConsultarSaldo()
         {
-            Console.WriteLine($"Saldo da conta {numeroConta} de {titular.nome}: {Saldo} reais");
+            Console.WriteLine($"saldo da conta {numeroConta} de {titular.nome}: {saldo} reais");
         }
         public virtual void Depositar(double valor)
         {
             if (valor > 0)
             {
                 AplicarTaxa();
-                Saldo += valor;
+                saldo += valor;
                 string transacao = $"Depósito de R${valor}";
                 historico.Add(transacao);
                 Console.WriteLine(transacao);
@@ -47,17 +47,17 @@ namespace Nullbank.Contas
         {
             if (valor > 0)
             {
-                if (Saldo >= valor)
+                if (saldo >= valor)
                 {
                     AplicarTaxa();
-                    Saldo -= valor;
+                    saldo -= valor;
                     string transacao = $"Saque de R${valor}";
                     historico.Add(transacao);
                     Console.WriteLine(transacao);
                 }
                 else
                 {
-                    Console.WriteLine("Saldo insuficiente para realizar o saque.");
+                    Console.WriteLine("saldo insuficiente para realizar o saque.");
                 }
             }
             else
@@ -69,11 +69,11 @@ namespace Nullbank.Contas
         {
             if (valor > 0)
             {
-                if (Saldo >= valor)
+                if (saldo >= valor)
                 {
                     AplicarTaxa();
-                    Saldo -= valor;
-                    contaDestino.Saldo += valor;
+                    saldo -= valor;
+                    contaDestino.saldo += valor;
 
                     string transacao = $"Transferência de R${valor} para a conta {contaDestino.numeroConta}";
                     historico.Add(transacao);
@@ -81,7 +81,7 @@ namespace Nullbank.Contas
                 }
                 else
                 {
-                    Console.WriteLine("Saldo insuficiente para realizar a transferência.");
+                    Console.WriteLine("saldo insuficiente para realizar a transferência.");
                 }
             }
             else

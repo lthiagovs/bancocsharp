@@ -6,7 +6,7 @@ namespace Nullbank.Contas
     {
         public double TaxaRendimento { get; }
 
-        public ContaPoupanca(int numeroConta, Cliente titular, double saldoInicial, double TaxaRendimento) : base(numeroConta, titular, saldoInicial)
+        public ContaPoupanca(int numeroConta, Cliente titular, double saldoInicial, double TaxaRendimento, string senha) : base(numeroConta, titular, saldoInicial, senha)
         {
             this.numeroConta = numeroConta;
             this.TaxaRendimento = TaxaRendimento;
@@ -14,22 +14,22 @@ namespace Nullbank.Contas
 
         public new void ConsultarSaldo()
         {
-            Console.WriteLine($"Saldo da conta poupança {numeroConta} de {titular.nome}: R${Saldo}, Taxa de Rendimento: {TaxaRendimento}%");
+            Console.WriteLine($"saldo da conta poupança {numeroConta} de {titular.nome}: R${saldo}, Taxa de Rendimento: {TaxaRendimento}%");
         }
         public override void Sacar(double valor)
         {
             if (valor > 0)
             {
-                if (Saldo >= valor)
+                if (saldo >= valor)
                 {
-                    Saldo -= valor;
+                    saldo -= valor;
                     string transacao = $"Saque de R${valor} (conta poupança)";
                     historico.Add(transacao);
                     Console.WriteLine(transacao);
                 }
                 else
                 {
-                    Console.WriteLine("Saldo insuficiente para realizar o saque.");
+                    Console.WriteLine("saldo insuficiente para realizar o saque.");
                 }
             }
             else
@@ -41,10 +41,10 @@ namespace Nullbank.Contas
         {
             if (valor > 0)
             {
-                if (Saldo >= valor)
+                if (saldo >= valor)
                 {
-                    Saldo -= valor;
-                    contaDestino.Saldo += valor;
+                    saldo -= valor;
+                    contaDestino.saldo += valor;
 
                     string transacao = $"Transferência de R${valor} para a conta {contaDestino.numeroConta} (conta poupança)";
                     historico.Add(transacao);
@@ -52,7 +52,7 @@ namespace Nullbank.Contas
                 }
                 else
                 {
-                    Console.WriteLine("Saldo insuficiente para realizar a transferência.");
+                    Console.WriteLine("saldo insuficiente para realizar a transferência.");
                 }
             }
             else

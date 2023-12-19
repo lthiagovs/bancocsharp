@@ -6,7 +6,7 @@ namespace Nullbank.Contas
     {
         public List<string> UsuariosSecundarios { get; }
 
-        public ContaCompartilhada(int numeroConta, Cliente titular, double saldoInicial, List<string> UsuariosSecundarios) : base(numeroConta, titular, saldoInicial)
+        public ContaCompartilhada(int numeroConta, Cliente titular, double saldoInicial, List<string> UsuariosSecundarios, string senha) : base(numeroConta, titular, saldoInicial, senha)
         {
             this.numeroConta = numeroConta;
             this.UsuariosSecundarios = UsuariosSecundarios;
@@ -16,16 +16,16 @@ namespace Nullbank.Contas
         {
             if (valor > 0)
             {
-                if (Saldo >= valor)
+                if (saldo >= valor)
                 {
-                    Saldo -= valor;
+                    saldo -= valor;
                     string transacao = $"Saque de R${valor} (conta compartilhada)";
                     historico.Add(transacao);
                     Console.WriteLine(transacao);
                 }
                 else
                 {
-                    Console.WriteLine("Saldo insuficiente para realizar o saque.");
+                    Console.WriteLine("saldo insuficiente para realizar o saque.");
                 }
             }
             else
@@ -37,10 +37,10 @@ namespace Nullbank.Contas
         {
             if (valor > 0)
             {
-                if (Saldo >= valor)
+                if (saldo >= valor)
                 {
-                    Saldo -= valor;
-                    contaDestino.Saldo += valor;
+                    saldo -= valor;
+                    contaDestino.saldo += valor;
 
                     string transacao = $"Transferência de R${valor} para a conta {contaDestino.numeroConta} (conta compartilhada)";
                     historico.Add(transacao);
@@ -48,7 +48,7 @@ namespace Nullbank.Contas
                 }
                 else
                 {
-                    Console.WriteLine("Saldo insuficiente para realizar a transferência.");
+                    Console.WriteLine("saldo insuficiente para realizar a transferência.");
                 }
             }
             else

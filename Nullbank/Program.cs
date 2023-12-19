@@ -1,8 +1,54 @@
 ﻿using Nullbank.Contas;
 using Nullbank.Arquivos;
 using Nullbank.Usuarios;
+using System.Runtime.CompilerServices;
 class Program
 {
+
+    /// <summary>
+    ///     Editar Clientes
+    ///     Tipos de Conta nos Arquivos e na interface
+    ///     Contas Conjuntas
+    ///     Polimento de Interface
+    ///     Remoção de Warnings e Comentarios
+    /// </summary>
+
+    //Cria um formulario de cadastro de funcionario no console
+    public static Funcionario cadastrarFuncionario()
+    {
+        Console.Write("CPF >> ");
+        string cpf = Console.ReadLine();
+
+        Console.Write("NOME >> ");
+        string nome = Console.ReadLine();
+
+        Console.Write("CEP >> ");
+        string cep = Console.ReadLine();
+
+        Console.Write("NUMERO >> ");
+        int num = int.Parse(Console.ReadLine());
+
+        Console.Write("RUA >> ");
+        string rua = Console.ReadLine();
+
+        Console.Write("CIDADE >> ");
+        string cidade = Console.ReadLine();
+
+        Console.Write("ESTADO >> ");
+        string estado = Console.ReadLine();
+
+        Console.Write("AGENCIA >> ");
+        int agencia = int.Parse(Console.ReadLine());
+
+        Console.Write("SENHA >> ");
+        string senha = Console.ReadLine();
+
+        Endereço funcionarioEndereço = new Endereço(cep, num, rua, cidade, estado);
+        Funcionario nFuncionario = new Funcionario(nome, cpf, funcionarioEndereço, agencia, senha);
+
+        return nFuncionario;
+    }
+    
     public static void Main()
     {
 
@@ -40,37 +86,7 @@ class Program
 
                             //Criar Funcionario
                             case 1:
-                                Console.Write("CPF >> ");
-                                string cpf = Console.ReadLine();
-
-                                Console.Write("NOME >> ");
-                                string nome = Console.ReadLine();
-
-                                Console.Write("CEP >> ");
-                                string cep = Console.ReadLine();
-
-                                Console.Write("NUMERO >> ");
-                                int num = int.Parse(Console.ReadLine());
-
-                                Console.Write("RUA >> ");
-                                string rua = Console.ReadLine();
-
-                                Console.Write("CIDADE >> ");
-                                string cidade = Console.ReadLine();
-
-                                Console.Write("ESTADO >> ");
-                                string estado = Console.ReadLine();
-
-                                Console.Write("AGENCIA >> ");
-                                int agencia = int.Parse(Console.ReadLine());
-
-                                Console.Write("SENHA >> ");
-                                string senha = Console.ReadLine();
-
-                                Endereço funcionarioEndereço = new Endereço(cep, num, rua, cidade, estado);
-                                Funcionario nFuncionario = new Funcionario(nome, cpf, funcionarioEndereço, agencia, senha);
-
-                                Arquivo.criaArquivoUsuario(nFuncionario);
+                                Arquivo.criaArquivoUsuario(cadastrarFuncionario());
                                 break;
 
                             //Buscar Funcionario
@@ -88,24 +104,17 @@ class Program
                                     Console.WriteLine("Nome: " + funcBusca.nome);
                                     Console.WriteLine("CPF:" + funcBusca.cpf);
                                     Console.WriteLine("Agencia: " + funcBusca.agencia);
+                                    if (int.Parse(escolha) == 3)
+                                    {
+                                        Console.WriteLine("Digite agora as novas informações: ");
+                                        Funcionario alterado = cadastrarFuncionario();
+                                        Arquivo.alteraUsuario(funcBusca, alterado);
+
+                                    }
                                 }
                                 else
                                 {
                                     Console.WriteLine("Nenhum funcionario com este nome foi encontrado!");
-                                }
-
-                                if (int.Parse(escolha) == 3)
-                                {
-                                    Console.WriteLine("\nAlterando Funcionario: ");
-
-                                    Console.Write("CPF >> ");
-                                    string cpfFunc = Console.ReadLine();
-
-                                    Console.Write("AGENCIA >> ");
-                                    int agenciaFunc = int.Parse(Console.ReadLine());
-
-                                    Console.WriteLine("\nFuncionario alterado! ");
-
                                 }
 
                                 Console.ReadLine();
@@ -126,7 +135,7 @@ class Program
                             switch (int.Parse(escolha))
                             {
                                 case 0:
-
+                                    Console.WriteLine("LogOut efetuado!");
                                     logado = false;
                                     break;
 
@@ -139,7 +148,8 @@ class Program
 
                                     Conta buscaConta = Arquivo.buscaConta(numeroConta);
 
-                                    if (!(buscaConta.numeroConta == 0))
+                                    //Conta encontrada
+                                    if (!(buscaConta.numeroConta == -1))
                                     {
                                         conta = buscaConta;
                                         acessaConta = true;
@@ -157,24 +167,37 @@ class Program
                         //Conta acessada
                         else
                         {
-                            Console.WriteLine("Saldo da conta:"+conta.Saldo+"\n0 - Sair\n1 - Sacar\n2 - Depositar\n3 - Transferir");
+                            Console.WriteLine("saldo da conta: R$"+conta.saldo+"\n0 - Sair\n1 - Sacar\n2 - Depositar\n3 - Transferir");
                             escolha = Console.ReadLine();
 
                             switch (int.Parse(escolha))
                             {
                                 case 0:
+                                    Arquivo.alteraConta(Arquivo.buscaConta(conta.numeroConta), conta);
                                     acessaConta = false;
                                     break;
                                 case 1:
+                                    Console.WriteLine("Digite o valor que deseja sacar: ");
+                                    escolha = Console.ReadLine();
+                                    conta.Sacar(double.Parse(escolha));
                                     break;
                                 case 2:
+                                    Console.WriteLine("Digite o valor que deseja Depositar: ");
+                                    escolha = Console.ReadLine();
+                                    conta.Depositar(int.Parse(escolha));
                                     break;
                                 case 3:
+                                    Console.WriteLine("Digite o valor que deseja transferir: ");
+                                    escolha = Console.ReadLine();
+                                    conta.Transferir(null, double.Parse(escolha));
                                     break;
-                                default: break;
+                                default:
+                                    break;
+
                             }
 
                         }
+                        Console.Clear();
                         break;
 
                     //Opções do Funcionario
@@ -262,9 +285,11 @@ class Program
                                 if (!usuarioConta.cpf.Equals(""))
                                 {
                                     Console.WriteLine("Titular de cpf: "+usuarioConta.cpf+" encontrado!");
-                                    Conta contaCriar = new ContaCorrente(Conta.totalContas,usuarioConta as Cliente,0,0);
+                                    Console.Write("SENHA >> ");
+                                    string contaSenha = Console.ReadLine();
+                                    Conta contaCriar = new ContaCorrente(Conta.totalContas,usuarioConta as Cliente,0,0,contaSenha);
 
-                                    Arquivo.criarArquivoConta(contaCriar);
+                                    Arquivo.criaArquivoConta(contaCriar);
 
                                     Console.WriteLine("Conta de numero: " + contaCriar.numeroConta + " criada com sucesso!");
 
